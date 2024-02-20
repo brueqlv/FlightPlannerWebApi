@@ -1,7 +1,6 @@
-﻿using FlightPlannerWebApi.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace FlightPlanner.Models
+namespace FlightPlannerWebApi.Models
 {
     public class FlightDbContext : DbContext
     {

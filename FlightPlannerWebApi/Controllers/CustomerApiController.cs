@@ -1,5 +1,5 @@
-﻿using FlightPlannerWebApi.Models;
-using FlightPlannerWebApi.Storage;
+﻿using FlightPlannerWebApi.Interfaces;
+using FlightPlannerWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightPlannerWebApi.Controllers
@@ -8,7 +8,13 @@ namespace FlightPlannerWebApi.Controllers
     [ApiController]
     public class CustomerApiController : ControllerBase
     {
-        private InMemoryFlightStorage _flightStorage = new InMemoryFlightStorage();
+        private IFlightService _flightStorage;
+
+        public CustomerApiController(IFlightService flightStorage)
+        {
+            _flightStorage = flightStorage;
+        }
+
         [HttpGet]
         [Route("airports")]
         public IActionResult SearchAirports(string search)

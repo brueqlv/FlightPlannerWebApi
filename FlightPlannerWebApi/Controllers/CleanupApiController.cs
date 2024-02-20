@@ -1,4 +1,4 @@
-﻿using FlightPlannerWebApi.Storage;
+﻿using FlightPlannerWebApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightPlannerWebApi.Controllers
@@ -7,7 +7,13 @@ namespace FlightPlannerWebApi.Controllers
     [ApiController]
     public class CleanupApiController : ControllerBase
     {
-        private InMemoryFlightStorage _flightStorage = new InMemoryFlightStorage();
+        private IFlightService _flightStorage;
+
+        public CleanupApiController(IFlightService flightStorage)
+        {
+            _flightStorage = flightStorage;
+        }
+
         [HttpPost]
         [Route("clear")]
         public IActionResult Clear()
