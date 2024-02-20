@@ -18,7 +18,7 @@ namespace FlightPlannerWebApi.Storage
             }
         }
 
-        public PageResult GetAllFlights(SearchFlightRequest request)
+        public PageResult GetPageResultByRequest(SearchFlightRequest request)
         {
             lock (_locker)
             {

@@ -27,7 +27,7 @@ namespace FlightPlannerWebApi.Controllers
                 return BadRequest();
             }
 
-            var flights = _flightStorage.GetAllFlights(search);
+            var flights = _flightStorage.GetPageResultByRequest(search);
 
             return Ok(flights);
         }
