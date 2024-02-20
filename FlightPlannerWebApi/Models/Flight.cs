@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace FlightPlannerWebApi.Models
 {
@@ -6,8 +7,14 @@ namespace FlightPlannerWebApi.Models
     {
         public int Id { get; set; }
 
+        [JsonIgnore]
+        public int FromId { get; set; }
+
         [Required(ErrorMessage = "From airport is required.")]
         public Airport From { get; set; }
+
+        [JsonIgnore]
+        public int ToId { get; set; }
 
         [Required(ErrorMessage = "To airport is required.")]
         public Airport To { get; set; }
