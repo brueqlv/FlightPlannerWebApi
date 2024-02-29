@@ -36,8 +36,6 @@ namespace FlightPlannerWebApi.Controllers
         [Route("flights")]
         public IActionResult AddFlight(Flight flight)
         {
-            lock (_locker)
-            {
                 if (!_flightStorage.IsFlightValid(flight))
                 {
                     return BadRequest();
@@ -51,7 +49,6 @@ namespace FlightPlannerWebApi.Controllers
                 var addedFlight = _flightStorage.AddFlight(flight);
 
                 return Created("", addedFlight);
-            }
         }
 
         [HttpDelete]

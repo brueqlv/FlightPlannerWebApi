@@ -112,13 +112,16 @@ namespace FlightPlannerWebApi.Storage
 
         public List<Airport> SearchAirports(string keyword)
         {
-            keyword = keyword.ToLower().Trim();
+            lock (_locker)
+            {
+                keyword = keyword.ToLower().Trim();
 
-            return GetAllAirports()
-                .Where(airport => airport.City.ToLower().Contains(keyword) ||
-                                  airport.Country.ToLower().Contains(keyword) ||
-                                  airport.AirportCode.ToLower().Contains(keyword))
-                .ToList();
+                return GetAllAirports()
+                    .Where(airport => airport.City.ToLower().Contains(keyword) ||
+                                      airport.Country.ToLower().Contains(keyword) ||
+                                      airport.AirportCode.ToLower().Contains(keyword))
+                    .ToList();
+            }
         }
 
         public HashSet<Airport> GetAllAirports()

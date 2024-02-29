@@ -16,8 +16,8 @@ builder.Services.AddAuthentication("BasicAuthentication")
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//builder.Services.AddSingleton<IFlightService, InMemoryFlightStorage>();
-builder.Services.AddScoped<IFlightService, DatabaseFlightStorage>();
+builder.Services.AddSingleton<IFlightService, InMemoryFlightStorage>();
+//builder.Services.AddScoped<IFlightService, DatabaseFlightStorage>();
 
 builder.Services.AddDbContext<FlightDbContext>(option =>
 {

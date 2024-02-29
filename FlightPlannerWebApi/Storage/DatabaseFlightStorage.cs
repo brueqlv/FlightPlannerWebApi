@@ -105,13 +105,10 @@ namespace FlightPlannerWebApi.Storage
 
         public Flight? GetFlightById(int id)
         {
-            lock (_locker)
-            {
-                return _dbContext.Flights
-                    .Include(f => f.From)
-                    .Include(f => f.To)
-                    .FirstOrDefault(f => f.Id == id);
-            }
+            return _dbContext.Flights
+                .Include(f => f.From)
+                .Include(f => f.To)
+                .FirstOrDefault(f => f.Id == id);
         }
 
         public bool IsFlightValid(Flight flight)
@@ -134,12 +131,15 @@ namespace FlightPlannerWebApi.Storage
 
         public List<Airport> SearchAirports(string keyword)
         {
-            keyword = keyword.ToLower().Trim();
+            lock (_locker)
+            {
+                keyword = keyword.ToLower().Trim();
 
-            return _dbContext.Airports.Where(a => a.City.ToLower().Contains(keyword) ||
-                                                  a.Country.ToLower().Contains(keyword) ||
-                                                  a.AirportCode.ToLower().Contains(keyword))
-                .ToList();
+                return _dbContext.Airports.Where(a => a.City.ToLower().Contains(keyword) ||
+                                                      a.Country.ToLower().Contains(keyword) ||
+                                                      a.AirportCode.ToLower().Contains(keyword))
+                    .ToList();
+            }
         }
 
         public List<Flight> SearchFlights(SearchFlightRequest request)
