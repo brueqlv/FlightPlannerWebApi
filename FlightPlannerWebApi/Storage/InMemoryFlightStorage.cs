@@ -9,13 +9,15 @@ namespace FlightPlannerWebApi.Storage
         private static int _id;
         private static object _locker = new();
 
-        public void AddFlight(Flight flight)
+        public Flight AddFlight(Flight flight)
         {
             lock (_locker)
             {
                 flight.Id = _id++;
                 _flights.Add(flight);
             }
+
+            return flight;
         }
 
         public PageResult GetPageResultByRequest(SearchFlightRequest request)
@@ -110,13 +112,16 @@ namespace FlightPlannerWebApi.Storage
 
         public List<Airport> SearchAirports(string keyword)
         {
-            keyword = keyword.ToLower().Trim();
+            lock (_locker)
+            {
+                keyword = keyword.ToLower().Trim();
 
-            return GetAllAirports()
-                .Where(airport => airport.City.ToLower().Contains(keyword) ||
-                                  airport.Country.ToLower().Contains(keyword) ||
-                                  airport.AirportCode.ToLower().Contains(keyword))
-                .ToList();
+                return GetAllAirports()
+                    .Where(airport => airport.City.ToLower().Contains(keyword) ||
+                                      airport.Country.ToLower().Contains(keyword) ||
+                                      airport.AirportCode.ToLower().Contains(keyword))
+                    .ToList();
+            }
         }
 
         public HashSet<Airport> GetAllAirports()

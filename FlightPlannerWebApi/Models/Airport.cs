@@ -5,6 +5,9 @@ namespace FlightPlannerWebApi.Models
 {
     public class Airport
     {
+        [JsonIgnore]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Country is required.")]
         public string Country { get; set; }
 

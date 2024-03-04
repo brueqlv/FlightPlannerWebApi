@@ -1,5 +1,5 @@
-﻿using FlightPlannerWebApi.Models;
-using FlightPlannerWebApi.Storage;
+﻿using FlightPlannerWebApi.Interfaces;
+using FlightPlannerWebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +11,12 @@ namespace FlightPlannerWebApi.Controllers
     public class AdminApiController : ControllerBase
     {
         private static readonly object _locker = new();
-        private InMemoryFlightStorage _flightStorage = new InMemoryFlightStorage();
+        private IFlightService _flightStorage;
+
+        public AdminApiController(IFlightService flightStorage)
+        {
+            _flightStorage = flightStorage;
+        }
 
         [HttpGet]
         [Route("flights/{id}")]
@@ -31,8 +36,6 @@ namespace FlightPlannerWebApi.Controllers
         [Route("flights")]
         public IActionResult AddFlight(Flight flight)
         {
-            lock (_locker)
-            {
                 if (!_flightStorage.IsFlightValid(flight))
                 {
                     return BadRequest();
@@ -43,10 +46,9 @@ namespace FlightPlannerWebApi.Controllers
                     return Conflict();
                 }
 
-                _flightStorage.AddFlight(flight);
+                var addedFlight = _flightStorage.AddFlight(flight);
 
-                return Created("", flight);
-            }
+                return Created("", addedFlight);
         }
 
         [HttpDelete]

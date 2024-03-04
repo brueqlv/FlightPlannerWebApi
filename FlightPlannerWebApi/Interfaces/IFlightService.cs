@@ -4,7 +4,7 @@ namespace FlightPlannerWebApi.Interfaces
 {
     public interface IFlightService
     {
-        void AddFlight(Flight flight);
+        Flight AddFlight(Flight flight);
         PageResult GetPageResultByRequest(SearchFlightRequest request);
         List<Flight> SearchFlights(SearchFlightRequest request);
         void DeleteFlightById(int id);
