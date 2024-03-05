@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FlightPlanner.Core.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace FlightPlannerWebApi.Models
+namespace FlightPlanner.Data
 {
-    public class FlightDbContext : DbContext
+    public class FlightDbContext : DbContext, IFlightDbContext
     {
         public FlightDbContext(DbContextOptions<FlightDbContext> options) : base(options) { }
 
@@ -22,6 +23,10 @@ namespace FlightPlannerWebApi.Models
                 .WithMany()
                 .HasForeignKey(f => f.ToId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Airport>()
+                .HasIndex(a => a.AirportCode)
+                .IsUnique();
         }
     }
 }

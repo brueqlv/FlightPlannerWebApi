@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace FlightPlannerWebApi.Models
+namespace FlightPlanner.Core.Models
 {
-    public class Airport
+    public class Airport : Entity
     {
-        [JsonIgnore]
-        public int Id { get; set; }
 
         [Required(ErrorMessage = "Country is required.")]
         public string Country { get; set; }
@@ -15,7 +13,6 @@ namespace FlightPlannerWebApi.Models
         public string City { get; set; }
 
         [Required(ErrorMessage = "Airport code is required.")]
-        [JsonPropertyName("airport")]
         public string AirportCode { get; set; }
     }
 }

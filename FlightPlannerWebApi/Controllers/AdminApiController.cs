@@ -1,4 +1,6 @@
-﻿using FlightPlannerWebApi.Interfaces;
+﻿using AutoMapper;
+using FlightPlanner.Core.Models;
+using FlightPlanner.Core.Services;
 using FlightPlannerWebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,52 +12,62 @@ namespace FlightPlannerWebApi.Controllers
     [ApiController]
     public class AdminApiController : ControllerBase
     {
-        private static readonly object _locker = new();
-        private IFlightService _flightStorage;
+        private readonly IFlightService _flightService;
+        private readonly IMapper _mapper;
 
-        public AdminApiController(IFlightService flightStorage)
+        public AdminApiController(IFlightService flightService, IMapper mapper)
         {
-            _flightStorage = flightStorage;
+            _flightService = flightService;
+            _mapper = mapper;
         }
+
 
         [HttpGet]
         [Route("flights/{id}")]
         public IActionResult GetFlight(int id)
         {
-            var flight = _flightStorage.GetFlightById(id);
+            var flight = _flightService.GetFullFlightById(id);
 
             if (flight == null)
             {
                 return NotFound();
             }
 
-            return Ok(flight);
+            return Ok(_mapper.Map<AddFlightResponse>(flight));
         }
 
         [HttpPut]
         [Route("flights")]
-        public IActionResult AddFlight(Flight flight)
+        public IActionResult AddFlight(AddFlightRequest request)
         {
-                if (!_flightStorage.IsFlightValid(flight))
-                {
-                    return BadRequest();
-                }
+            var flightToAdd = _mapper.Map<Flight>(request);
 
-                if (_flightStorage.FlightExists(flight))
-                {
-                    return Conflict();
-                }
+            if (!_flightService.IsFlightValid(flightToAdd))
+            {
+                return BadRequest();
+            }
 
-                var addedFlight = _flightStorage.AddFlight(flight);
+            if (_flightService.FlightExists(flightToAdd))
+            {
+                return Conflict();
+            }
 
-                return Created("", addedFlight);
+            var addedFlight = _flightService.AddFlight(flightToAdd);
+
+            return Created("", _mapper.Map<AddFlightResponse>(addedFlight));
         }
 
         [HttpDelete]
         [Route("flights/{id}")]
         public IActionResult DeleteFlight(int id)
         {
-            _flightStorage.DeleteFlightById(id);
+            var flightToDelete = _flightService.GetById(id);
+
+            if (flightToDelete != null)
+            {
+                _flightService.Delete(flightToDelete);
+            }
+
             return Ok();
         }
     }
