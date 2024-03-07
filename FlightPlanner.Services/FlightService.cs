@@ -90,35 +90,6 @@ namespace FlightPlanner.Services
                 .SingleOrDefault(flight => flight.Id == id);
         }
 
-        public bool IsFlightValid(Flight flight)
-        {
-            if (flight.From.AirportCode.ToLower().Trim() == flight.To.AirportCode.ToLower().Trim())
-            {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(flight.Carrier) ||
-                string.IsNullOrEmpty(flight.From.AirportCode) ||
-                string.IsNullOrEmpty(flight.From.Country) ||
-                string.IsNullOrEmpty(flight.From.City) ||
-                string.IsNullOrEmpty(flight.To.AirportCode) ||
-                string.IsNullOrEmpty(flight.To.Country) ||
-                string.IsNullOrEmpty(flight.To.City))
-            {
-                return false;
-            }
-
-            var arrivalDate = DateTime.Parse(flight.ArrivalTime);
-            var departureDate = DateTime.Parse(flight.DepartureTime);
-
-            if (departureDate >= arrivalDate)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         public List<Flight> SearchFlights(SearchFlightRequest request)
         {
             var fromAirportCode = request.From.ToUpper();

@@ -23,10 +23,6 @@ namespace FlightPlanner.Data
                 .WithMany()
                 .HasForeignKey(f => f.ToId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Airport>()
-                .HasIndex(a => a.AirportCode)
-                .IsUnique();
         }
     }
 }

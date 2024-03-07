@@ -2,6 +2,7 @@
 using FlightPlanner.Core.Models;
 using FlightPlanner.Core.Services;
 using FlightPlannerWebApi.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +15,13 @@ namespace FlightPlannerWebApi.Controllers
     {
         private readonly IFlightService _flightService;
         private readonly IMapper _mapper;
+        private readonly IValidator<Flight> _validator;
 
-        public AdminApiController(IFlightService flightService, IMapper mapper)
+        public AdminApiController(IFlightService flightService, IMapper mapper, IValidator<Flight> validator)
         {
             _flightService = flightService;
             _mapper = mapper;
+            _validator = validator;
         }
 
 
@@ -41,10 +44,11 @@ namespace FlightPlannerWebApi.Controllers
         public IActionResult AddFlight(AddFlightRequest request)
         {
             var flightToAdd = _mapper.Map<Flight>(request);
+            var validationResult = _validator.Validate(flightToAdd);
 
-            if (!_flightService.IsFlightValid(flightToAdd))
+            if (!validationResult.IsValid)
             {
-                return BadRequest();
+                return BadRequest(validationResult.Errors);
             }
 
             if (_flightService.FlightExists(flightToAdd))

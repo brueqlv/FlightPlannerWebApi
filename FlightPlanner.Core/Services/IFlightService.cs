@@ -12,8 +12,6 @@ namespace FlightPlanner.Core.Services
         Flight? GetFullFlightById(int id);
         bool FlightExists(Flight flight);
         void Clear();
-        bool IsFlightValid(Flight flight);
-        List<Flight> SearchFlights(SearchFlightRequest request);
         PageResult GetPageResultByRequest(SearchFlightRequest request);
         Flight AddFlight(Flight flight);
     }

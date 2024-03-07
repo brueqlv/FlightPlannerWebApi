@@ -1,9 +1,11 @@
 using System.Reflection;
 using FlightPlanner.Core.Models;
 using FlightPlanner.Core.Services;
+using FlightPlanner.Core.Validators;
 using FlightPlanner.Data;
 using FlightPlanner.Services;
 using FlightPlannerWebApi.Handlers;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,8 +34,10 @@ builder.Services.AddTransient<IEntityService<Airport>, EntityService<Airport>>()
 builder.Services.AddTransient<IEntityService<Flight>, EntityService<Flight>>();
 builder.Services.AddTransient<IFlightService, FlightService>();
 builder.Services.AddTransient<IAirportService, AirportService>();
-
-builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+var assembly = Assembly.GetExecutingAssembly();
+builder.Services.AddAutoMapper(assembly);
+var coreAssembly = typeof(FlightValidator).Assembly;
+builder.Services.AddValidatorsFromAssembly(coreAssembly);
 
 
 var app = builder.Build();
