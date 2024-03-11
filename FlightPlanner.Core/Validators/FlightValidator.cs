@@ -1,4 +1,5 @@
 ﻿using FlightPlanner.Core.Models;
+using FlightPlanner.Core.Resources;
 using FluentValidation;
 
 namespace FlightPlanner.Core.Validators
@@ -11,12 +12,12 @@ namespace FlightPlanner.Core.Validators
 
             RuleFor(flight => flight.ArrivalTime)
                 .NotEmpty()
-                .Must(BeValidDateTime);
+                .Must(ValidatorHelpers.BeValidDateTime);
 
             RuleFor(flight => flight.DepartureTime)
                 .NotEmpty()
-                .Must(BeValidDateTime)
-                .Must((flight, departureTime) => IsDepartureBeforeArrival(flight.DepartureTime, flight.ArrivalTime));
+                .Must(ValidatorHelpers.BeValidDateTime)
+                .Must((flight, departureTime) => ValidatorHelpers.IsDepartureBeforeArrival(flight.DepartureTime, flight.ArrivalTime));
 
             RuleFor(flight => flight.From.AirportCode)
                 .Must((flight, fromAirportCode) =>
@@ -27,31 +28,10 @@ namespace FlightPlanner.Core.Validators
 
                     return notEqual;
                 })
-                .WithMessage("Departure and destination airports cannot be the same.");
+                .WithMessage(ValidationMessages.DepartureDestinationSameMessage);
 
             RuleFor(flight => flight.To).SetValidator(new AirportValidator());
             RuleFor(flight => flight.From).SetValidator(new AirportValidator());
-        }
-
-        private bool BeValidDateTime(string arrivalTime)
-        {
-            if (!DateTime.TryParse(arrivalTime, out DateTime parsedDateTime))
-            {
-                return false; 
-            }
-
-            return true;
-        }
-
-        private bool IsDepartureBeforeArrival(string departureTime, string arrivalTime)
-        {
-            if (!DateTime.TryParse(departureTime, out DateTime departureDateTime) ||
-                !DateTime.TryParse(arrivalTime, out DateTime arrivalDateTime))
-            {
-                return false;
-            }
-
-            return departureDateTime < arrivalDateTime;
         }
     }
 }

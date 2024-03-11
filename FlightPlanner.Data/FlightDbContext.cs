@@ -1,4 +1,5 @@
 ﻿using FlightPlanner.Core.Models;
+using FlightPlanner.Data.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlightPlanner.Data
@@ -12,17 +13,7 @@ namespace FlightPlanner.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Flight>()
-                .HasOne(f => f.From)
-                .WithMany()
-                .HasForeignKey(f => f.FromId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Flight>()
-                .HasOne(f => f.To)
-                .WithMany()
-                .HasForeignKey(f => f.ToId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.ApplyConfiguration(new FlightConfiguration());
         }
     }
 }

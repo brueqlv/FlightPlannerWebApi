@@ -25,7 +25,6 @@ namespace FlightPlannerWebApi.Mapping
                 .ForMember(destination => destination.ToId,
                     options => options.Ignore());
             CreateMap<Flight, AddFlightResponse>();
-
         }
     }
 }

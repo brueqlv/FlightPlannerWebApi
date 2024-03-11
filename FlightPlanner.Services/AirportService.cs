@@ -18,7 +18,8 @@ namespace FlightPlanner.Services
             {
                 keyword = keyword.ToLower().Trim();
 
-                return _dbContext.Airports.Where(a => a.City.ToLower().Contains(keyword) ||
+                return _dbContext.Airports
+                    .Where(a => a.City.ToLower().Contains(keyword) ||
                                                       a.Country.ToLower().Contains(keyword) ||
                                                       a.AirportCode.ToLower().Contains(keyword))
                     .ToList();

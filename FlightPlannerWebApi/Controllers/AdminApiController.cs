@@ -24,7 +24,6 @@ namespace FlightPlannerWebApi.Controllers
             _validator = validator;
         }
 
-
         [HttpGet]
         [Route("flights/{id}")]
         public IActionResult GetFlight(int id)

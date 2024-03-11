@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddControllers();
 
 builder.Services.AddAuthentication("BasicAuthentication")
@@ -34,11 +33,9 @@ builder.Services.AddTransient<IEntityService<Airport>, EntityService<Airport>>()
 builder.Services.AddTransient<IEntityService<Flight>, EntityService<Flight>>();
 builder.Services.AddTransient<IFlightService, FlightService>();
 builder.Services.AddTransient<IAirportService, AirportService>();
-var assembly = Assembly.GetExecutingAssembly();
-builder.Services.AddAutoMapper(assembly);
-var coreAssembly = typeof(FlightValidator).Assembly;
-builder.Services.AddValidatorsFromAssembly(coreAssembly);
 
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddValidatorsFromAssembly(typeof(FlightValidator).Assembly);
 
 var app = builder.Build();
 
