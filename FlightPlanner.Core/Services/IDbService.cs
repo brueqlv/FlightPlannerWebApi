@@ -9,5 +9,6 @@ namespace FlightPlanner.Core.Services
         T Create<T>(T entity) where T: Entity;
         void Delete<T>(T entity) where T : Entity;
         void Update<T>(T entity) where T : Entity;
+        void Clear();
     }
 }

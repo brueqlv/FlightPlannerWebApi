@@ -6,7 +6,6 @@ namespace FlightPlanner.Core.Services
     {
         Flight? GetFullFlightById(int id);
         bool FlightExists(Flight flight);
-        void Clear();
         PageResult GetPageResultByRequest(SearchFlightRequest request);
         Flight AddFlight(Flight flight);
     }

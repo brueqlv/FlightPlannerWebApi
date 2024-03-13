@@ -63,13 +63,6 @@ namespace FlightPlanner.Services
             }
         }
 
-        public void Clear()
-        {
-            _dbContext.Flights.RemoveRange(_dbContext.Flights);
-            _dbContext.Airports.RemoveRange(_dbContext.Airports);
-            _dbContext.SaveChanges();
-        }
-
         public bool FlightExists(Flight flight)
         {
             lock (_locker)
