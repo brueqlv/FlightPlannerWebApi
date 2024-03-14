@@ -9,7 +9,6 @@ namespace FlightPlanner.Services
         public EntityService(IFlightDbContext dbContext) : base(dbContext)
         {
         }
-
         public T Create(T entity)
         {
             return Create<T>(entity);
@@ -18,6 +17,11 @@ namespace FlightPlanner.Services
         public void Delete(T entity)
         {
             Delete<T>(entity);
+        }
+
+        public void DeleteAll(T entity)
+        {
+            DeleteAll(entity);
         }
 
         public IEnumerable<T> GetAll()

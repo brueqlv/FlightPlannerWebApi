@@ -4,7 +4,8 @@ using FlightPlanner.Core.Services;
 using FlightPlanner.Core.Validators;
 using FlightPlanner.Data;
 using FlightPlanner.Services;
-using FlightPlannerWebApi.Handlers;
+using FlightPlanner.UseCases;
+using FlightPlanner.WebApi.Handlers;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,8 @@ builder.Services.AddTransient<IAirportService, AirportService>();
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddValidatorsFromAssembly(typeof(FlightValidator).Assembly);
+
+builder.Services.AddServices();
 
 var app = builder.Build();
 

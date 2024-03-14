@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace FlightPlannerWebApi.Models
+﻿namespace FlightPlanner.UseCases.Models
 {
     public class AirportViewModel
     {
