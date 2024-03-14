@@ -1,17 +1,16 @@
-﻿using FlightPlannerWebApi.Interfaces;
-using FlightPlannerWebApi.Models;
+﻿using FlightPlanner.Core.Models;
+using FlightPlanner.Core.Services;
+using FlightPlanner.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace FlightPlannerWebApi.Storage
+namespace FlightPlanner.Services
 {
-    public class DatabaseFlightStorage : IFlightService
+    public class FlightService : EntityService<Flight>, IFlightService
     {
-        private FlightDbContext _dbContext;
         private static object _locker = new();
 
-        public DatabaseFlightStorage(FlightDbContext dbContext)
+        public FlightService(IFlightDbContext context) : base(context)
         {
-            _dbContext = dbContext;
         }
 
         public Flight AddFlight(Flight flight)
@@ -64,27 +63,6 @@ namespace FlightPlannerWebApi.Storage
             }
         }
 
-        public void Clear()
-        {
-            lock (_locker)
-            {
-                _dbContext.Flights.RemoveRange(_dbContext.Flights);
-                _dbContext.Airports.RemoveRange(_dbContext.Airports);
-                _dbContext.SaveChanges();
-            }
-        }
-
-        public void DeleteFlightById(int id)
-        {
-            var flightToRemove = _dbContext.Flights.SingleOrDefault(f => f.Id == id);
-
-            if (flightToRemove != null)
-            {
-                _dbContext.Remove(flightToRemove);
-                _dbContext.SaveChanges();
-            }
-        }
-
         public bool FlightExists(Flight flight)
         {
             lock (_locker)
@@ -92,54 +70,17 @@ namespace FlightPlannerWebApi.Storage
                 return _dbContext.Flights.Any(f => f.Carrier.ToLower().Trim() == flight.Carrier.ToLower().Trim() &&
                                                    f.DepartureTime == flight.DepartureTime &&
                                                    f.ArrivalTime == flight.ArrivalTime &&
-                                                   f.From.AirportCode.ToLower().Trim() == flight.From.AirportCode.ToLower().Trim());
+                                                   f.From.AirportCode.ToLower().Trim() ==
+                                                   flight.From.AirportCode.ToLower().Trim());
             }
         }
 
-        public PageResult GetPageResultByRequest(SearchFlightRequest request)
-        {
-            var searchedFlights = SearchFlights(request);
-
-            return new PageResult(searchedFlights);
-        }
-
-        public Flight? GetFlightById(int id)
+        public Flight? GetFullFlightById(int id)
         {
             return _dbContext.Flights
-                .Include(f => f.From)
-                .Include(f => f.To)
-                .FirstOrDefault(f => f.Id == id);
-        }
-
-        public bool IsFlightValid(Flight flight)
-        {
-            if (flight.From.AirportCode.ToLower().Trim() == flight.To.AirportCode.ToLower().Trim())
-            {
-                return false;
-            }
-
-            var arrivalDate = DateTime.Parse(flight.ArrivalTime);
-            var departureDate = DateTime.Parse(flight.DepartureTime);
-
-            if (departureDate >= arrivalDate)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public List<Airport> SearchAirports(string keyword)
-        {
-            lock (_locker)
-            {
-                keyword = keyword.ToLower().Trim();
-
-                return _dbContext.Airports.Where(a => a.City.ToLower().Contains(keyword) ||
-                                                      a.Country.ToLower().Contains(keyword) ||
-                                                      a.AirportCode.ToLower().Contains(keyword))
-                    .ToList();
-            }
+                .Include(flight => flight.From)
+                .Include(flight => flight.To)
+                .SingleOrDefault(flight => flight.Id == id);
         }
 
         public List<Flight> SearchFlights(SearchFlightRequest request)
@@ -151,12 +92,19 @@ namespace FlightPlannerWebApi.Storage
                 .Where(f =>
                     f.From.AirportCode.ToUpper() == fromAirportCode &&
                     f.To.AirportCode.ToUpper() == toAirportCode &&
-                    (request.DepartureDate.Length < 16 ?
-                        f.DepartureTime.Substring(0, 10) == request.DepartureDate.Substring(0, 10) :
-                        f.DepartureTime == request.DepartureDate))
+                    (request.DepartureDate.Length < 16
+                        ? f.DepartureTime.Substring(0, 10) == request.DepartureDate.Substring(0, 10)
+                        : f.DepartureTime == request.DepartureDate))
                 .ToList();
 
             return flights;
+        }
+
+        public PageResult GetPageResultByRequest(SearchFlightRequest request)
+        {
+            var searchedFlights = SearchFlights(request);
+
+            return new PageResult(searchedFlights);
         }
     }
 }

@@ -1,12 +1,15 @@
+using System.Reflection;
+using FlightPlanner.Core.Models;
+using FlightPlanner.Core.Services;
+using FlightPlanner.Core.Validators;
+using FlightPlanner.Data;
+using FlightPlanner.Services;
 using FlightPlannerWebApi.Handlers;
-using FlightPlannerWebApi.Interfaces;
-using FlightPlannerWebApi.Models;
-using FlightPlannerWebApi.Storage;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 builder.Services.AddControllers();
 
@@ -16,9 +19,6 @@ builder.Services.AddAuthentication("BasicAuthentication")
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IFlightService, InMemoryFlightStorage>();
-//builder.Services.AddScoped<IFlightService, DatabaseFlightStorage>();
-
 builder.Services.AddDbContext<FlightDbContext>(option =>
 {
     string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -26,6 +26,16 @@ builder.Services.AddDbContext<FlightDbContext>(option =>
 
     option.UseSqlServer(connectionString);
 }, ServiceLifetime.Scoped);
+
+builder.Services.AddTransient<IFlightDbContext, FlightDbContext>();
+builder.Services.AddTransient<IDbService, DbService>();
+builder.Services.AddTransient<IEntityService<Airport>, EntityService<Airport>>();
+builder.Services.AddTransient<IEntityService<Flight>, EntityService<Flight>>();
+builder.Services.AddTransient<IFlightService, FlightService>();
+builder.Services.AddTransient<IAirportService, AirportService>();
+
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddValidatorsFromAssembly(typeof(FlightValidator).Assembly);
 
 var app = builder.Build();
 

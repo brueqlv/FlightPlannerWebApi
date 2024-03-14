@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace FlightPlannerWebApi.Migrations
+namespace FlightPlanner.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace FlightPlannerWebApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AirportCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    AirportCode = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,6 +53,12 @@ namespace FlightPlannerWebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Airports_AirportCode",
+                table: "Airports",
+                column: "AirportCode",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Flights_FromId",

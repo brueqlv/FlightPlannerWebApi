@@ -1,4 +1,5 @@
-﻿using FlightPlannerWebApi.Interfaces;
+﻿using AutoMapper;
+using FlightPlanner.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightPlannerWebApi.Controllers
@@ -7,18 +8,18 @@ namespace FlightPlannerWebApi.Controllers
     [ApiController]
     public class CleanupApiController : ControllerBase
     {
-        private IFlightService _flightStorage;
+        private readonly IFlightService _flightService;
 
-        public CleanupApiController(IFlightService flightStorage)
+        public CleanupApiController(IFlightService flightService)
         {
-            _flightStorage = flightStorage;
+            _flightService = flightService;
         }
 
         [HttpPost]
         [Route("clear")]
         public IActionResult Clear()
         {
-            _flightStorage.Clear();
+            _flightService.Clear();
             return Ok();
         }
     }
