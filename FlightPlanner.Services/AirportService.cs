@@ -4,13 +4,10 @@ using FlightPlanner.Data;
 
 namespace FlightPlanner.Services
 {
-    public class AirportService : EntityService<Airport>, IAirportService
+    public class AirportService(IFlightDbContext context)
+        : EntityService<Airport>(context), IAirportService
     {
         private static object _locker = new();
-
-        public AirportService(IFlightDbContext context) : base(context)
-        {
-        }
 
         public List<Airport> SearchAirports(string keyword)
         {

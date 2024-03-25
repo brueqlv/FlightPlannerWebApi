@@ -5,14 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FlightPlanner.Services
 {
-    public class DbService : IDbService
+    public class DbService(IFlightDbContext dbContext) : IDbService
     {
-        protected readonly IFlightDbContext _dbContext;
-
-        public DbService(IFlightDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+        protected readonly IFlightDbContext _dbContext = dbContext;
 
         public T Create<T>(T entity) where T : Entity
         {
@@ -25,6 +20,12 @@ namespace FlightPlanner.Services
         public void Delete<T>(T entity) where T : Entity
         {
             _dbContext.Set<T>().Remove(entity);
+            _dbContext.SaveChanges();
+        }
+
+        public void DeleteAll<T>() where T : Entity
+        {
+            _dbContext.Set<T>().RemoveRange(_dbContext.Set<T>());
             _dbContext.SaveChanges();
         }
 
@@ -41,13 +42,6 @@ namespace FlightPlanner.Services
         public void Update<T>(T entity) where T : Entity
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
-            _dbContext.SaveChanges();
-        }
-
-        public void Clear()
-        {
-            _dbContext.Flights.RemoveRange(_dbContext.Flights);
-            _dbContext.Airports.RemoveRange(_dbContext.Airports);
             _dbContext.SaveChanges();
         }
     }

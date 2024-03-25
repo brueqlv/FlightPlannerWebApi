@@ -5,13 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FlightPlanner.Services
 {
-    public class FlightService : EntityService<Flight>, IFlightService
+    public class FlightService(IFlightDbContext context)
+        : EntityService<Flight>(context), IFlightService
     {
         private static object _locker = new();
-
-        public FlightService(IFlightDbContext context) : base(context)
-        {
-        }
 
         public Flight AddFlight(Flight flight)
         {

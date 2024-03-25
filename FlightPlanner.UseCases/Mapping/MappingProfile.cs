@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using FlightPlanner.Core.Models;
-using FlightPlannerWebApi.Models;
+using FlightPlanner.UseCases.Models;
 
-namespace FlightPlannerWebApi.Mapping
+namespace FlightPlanner.UseCases.Mapping
 {
     public class MappingProfile : Profile
     {
