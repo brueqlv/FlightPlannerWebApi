@@ -3,5 +3,5 @@ using MediatR;
 
 namespace FlightPlanner.UseCases.Airports.List
 {
-    public record GetAirportsListByKeywordQuery(string Keyword) : IRequest<ServiceResult>;
+    public record GetAirportsByKeywordQuery(string Keyword) : IRequest<ServiceResult>;
 }

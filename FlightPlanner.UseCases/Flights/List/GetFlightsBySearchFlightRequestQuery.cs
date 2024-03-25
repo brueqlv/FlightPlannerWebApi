@@ -4,5 +4,5 @@ using MediatR;
 
 namespace FlightPlanner.UseCases.Flights.List
 {
-    public record GetFlightsListBySearchFlightRequestQuery(SearchFlightRequest SearchFlightRequest) : IRequest<ServiceResult>;
+    public record GetFlightsBySearchFlightRequestQuery(SearchFlightRequest SearchFlightRequest) : IRequest<ServiceResult>;
 }

@@ -5,10 +5,10 @@ using MediatR;
 
 namespace FlightPlanner.UseCases.Flights.List
 {
-    public class GetFlightsListBySearchFlightRequestQueryHandler(IFlightService flightService) 
-        : IRequestHandler<GetFlightsListBySearchFlightRequestQuery, ServiceResult>
+    public class GetFlightsBySearchFlightRequestQueryHandler(IFlightService flightService) 
+        : IRequestHandler<GetFlightsBySearchFlightRequestQuery, ServiceResult>
     {
-        public async Task<ServiceResult> Handle(GetFlightsListBySearchFlightRequestQuery request, CancellationToken cancellationToken)
+        public async Task<ServiceResult> Handle(GetFlightsBySearchFlightRequestQuery request, CancellationToken cancellationToken)
         {
             if (request.SearchFlightRequest.From == request.SearchFlightRequest.To)
             {

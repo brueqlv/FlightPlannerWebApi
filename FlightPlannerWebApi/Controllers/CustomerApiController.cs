@@ -17,14 +17,14 @@ namespace FlightPlanner.WebApi.Controllers
         [Route("airports")]
         public async Task<IActionResult> SearchAirports(string search)
         {
-            return (await mediator.Send(new GetAirportsListByKeywordQuery(search))).ToActionResult();
+            return (await mediator.Send(new GetAirportsByKeywordQuery(search))).ToActionResult();
         }
 
         [HttpPost]
         [Route("flights/search")]
         public async Task<IActionResult> SearchFlights(SearchFlightRequest search)
         {
-            return (await mediator.Send(new GetFlightsListBySearchFlightRequestQuery(search))).ToActionResult();
+            return (await mediator.Send(new GetFlightsBySearchFlightRequestQuery(search))).ToActionResult();
         }
 
         [HttpGet]

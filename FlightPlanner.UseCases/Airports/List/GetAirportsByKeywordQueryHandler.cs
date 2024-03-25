@@ -6,10 +6,10 @@ using MediatR;
 
 namespace FlightPlanner.UseCases.Airports.List
 {
-    public class GetAirportsListByKeywordQueryHandler(IAirportService airportService, IMapper mapper)
-        : IRequestHandler<GetAirportsListByKeywordQuery, ServiceResult>
+    public class GetAirportsByKeywordQueryHandler(IAirportService airportService, IMapper mapper)
+        : IRequestHandler<GetAirportsByKeywordQuery, ServiceResult>
     {
-        public async Task<ServiceResult> Handle(GetAirportsListByKeywordQuery request, CancellationToken cancellationToken)
+        public async Task<ServiceResult> Handle(GetAirportsByKeywordQuery request, CancellationToken cancellationToken)
         {
             var airports = airportService.SearchAirports(request.Keyword);
 
